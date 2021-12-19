@@ -81,7 +81,7 @@ func (ch *complexHandler) UploadIcon(c *gin.Context) {
 	}
 
 	agency, uploadErr := ch.srv.UploadIcon(agencyID, file)
-	if err != nil {
+	if uploadErr != nil {
 		c.JSON(uploadErr.Status(), uploadErr)
 		return
 	}
