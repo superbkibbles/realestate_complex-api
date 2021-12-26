@@ -8,12 +8,13 @@ const (
 type Complex struct {
 	ID               string    `json:"id"`
 	Name             string    `json:"name"`
-	PriceFrom        float64   `json:"price_from"`
-	PriceTo          float64   `json:"price_to"`
+	PriceFrom        int64     `json:"price_from"`
+	PriceTo          int64     `json:"price_to"`
 	Photo            string    `json:"photo"`
 	Address          string    `json:"address"`
 	GPS              gps       `json:"gps"`
 	City             string    `json:"city"`
+	Country          string    `json:"country"`
 	NumberOfBuilding int64     `json:"number_of_building"`
 	NumberOfVilla    int64     `json:"number_of_villa"`
 	Services         services  `json:"services"`
@@ -55,10 +56,10 @@ type amenities struct {
 }
 
 type services struct {
-	Electric       float64 `json:"electric"`
-	WaterResources float64 `json:"water_resources"`
-	Rubbish        float64 `json:"rubbish"`
-	SecurityHours  string  `json:"security_hours"`
+	Electric       int64  `json:"electric"`
+	WaterResources int64  `json:"water_resources"`
+	Rubbish        int64  `json:"rubbish"`
+	SecurityHours  string `json:"security_hours"`
 }
 
 type gps struct {

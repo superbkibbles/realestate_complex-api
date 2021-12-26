@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/superbkibbles/bookstore_utils-go/logger"
 	"github.com/superbkibbles/bookstore_utils-go/rest_errors"
 	"github.com/superbkibbles/realestate_employee-api/src/domain/complex"
 	"github.com/superbkibbles/realestate_employee-api/src/domain/query"
@@ -46,6 +47,7 @@ func (ch *complexHandler) Create(c *gin.Context) {
 	var complex complex.Complex
 
 	if err := c.ShouldBindJSON(&complex); err != nil {
+		logger.Info(err.Error())
 		restErr := rest_errors.NewBadRequestErr("Bad JSON body")
 		c.JSON(restErr.Status(), restErr)
 		return
