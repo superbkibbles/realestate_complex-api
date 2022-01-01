@@ -69,7 +69,7 @@ func (ch *complexHandler) GetByID(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusFound, complex)
+	c.JSON(http.StatusOK, complex)
 }
 
 func (ch *complexHandler) UploadIcon(c *gin.Context) {
