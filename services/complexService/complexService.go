@@ -5,12 +5,12 @@ import (
 	"strings"
 
 	"github.com/superbkibbles/bookstore_utils-go/rest_errors"
-	"github.com/superbkibbles/realestate_employee-api/src/domain/complex"
-	"github.com/superbkibbles/realestate_employee-api/src/domain/query"
-	"github.com/superbkibbles/realestate_employee-api/src/domain/update"
-	"github.com/superbkibbles/realestate_employee-api/src/repository/db"
-	"github.com/superbkibbles/realestate_employee-api/src/utils/date_utils"
-	"github.com/superbkibbles/realestate_employee-api/src/utils/file_utils"
+	"github.com/superbkibbles/realestate_employee-api/domain/complex"
+	"github.com/superbkibbles/realestate_employee-api/domain/query"
+	"github.com/superbkibbles/realestate_employee-api/domain/update"
+	"github.com/superbkibbles/realestate_employee-api/repository/db"
+	"github.com/superbkibbles/realestate_employee-api/utils/date_utils"
+	"github.com/superbkibbles/realestate_employee-api/utils/file_utils"
 )
 
 type ComplexService interface {

@@ -7,10 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/superbkibbles/bookstore_utils-go/logger"
 	"github.com/superbkibbles/bookstore_utils-go/rest_errors"
-	"github.com/superbkibbles/realestate_employee-api/src/domain/complex"
-	"github.com/superbkibbles/realestate_employee-api/src/domain/query"
-	"github.com/superbkibbles/realestate_employee-api/src/domain/update"
-	"github.com/superbkibbles/realestate_employee-api/src/services/complexService"
+	"github.com/superbkibbles/realestate_employee-api/domain/complex"
+	"github.com/superbkibbles/realestate_employee-api/domain/query"
+	"github.com/superbkibbles/realestate_employee-api/domain/update"
+	"github.com/superbkibbles/realestate_employee-api/services/complexService"
 )
 
 type ComplexHandler interface {

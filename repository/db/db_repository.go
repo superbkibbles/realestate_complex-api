@@ -7,10 +7,10 @@ import (
 	"strings"
 
 	"github.com/superbkibbles/bookstore_utils-go/rest_errors"
-	"github.com/superbkibbles/realestate_employee-api/src/clients/elasticsearch"
-	"github.com/superbkibbles/realestate_employee-api/src/domain/complex"
-	"github.com/superbkibbles/realestate_employee-api/src/domain/query"
-	"github.com/superbkibbles/realestate_employee-api/src/domain/update"
+	"github.com/superbkibbles/realestate_employee-api/clients/elasticsearch"
+	"github.com/superbkibbles/realestate_employee-api/domain/complex"
+	"github.com/superbkibbles/realestate_employee-api/domain/query"
+	"github.com/superbkibbles/realestate_employee-api/domain/update"
 )
 
 var (
