@@ -1,4 +1,4 @@
-module github.com/superbkibbles/realestate_employee-api
+module github.com/superbkibbles/realestate_complex-api
 
 go 1.16
 
