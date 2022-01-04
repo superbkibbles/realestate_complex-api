@@ -1,6 +1,6 @@
 package main
 
-import "github.com/superbkibbles/realestate_employee-api/application"
+import "github.com/superbkibbles/realestate_complex-api/application"
 
 func main() {
 	application.StartApplication()
