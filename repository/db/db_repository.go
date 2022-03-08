@@ -25,6 +25,7 @@ type DbRepository interface {
 	UploadIcon(agency *complex.Complex, id string) rest_errors.RestErr
 	Update(id string, updateRequest update.EsUpdate) (*complex.Complex, rest_errors.RestErr)
 	Search(query query.EsQuery) (complex.Complexes, rest_errors.RestErr)
+	Translate(complexID string, complexRequest complex.TranslateRequest, local string) (*complex.Complex, rest_errors.RestErr)
 }
 type dbRepository struct{}
 
@@ -42,14 +43,38 @@ func (db *dbRepository) Get() (complex.Complexes, rest_errors.RestErr) {
 	for i, hit := range result.Hits.Hits {
 		bytes, _ := hit.Source.MarshalJSON()
 		var c complex.Complex
-		if err := json.Unmarshal(bytes, &c); err != nil {
-			return nil, rest_errors.NewInternalServerErr("error when trying to parse response", errors.New("database error"))
-		}
+		// if err := json.Unmarshal(bytes, &c); err != nil {
+		// 	return nil, rest_errors.NewInternalServerErr("error when trying to parse response", errors.New("database error"))
+		// }
+		json.Unmarshal(bytes, &c)
 		c.ID = hit.Id
 		complexes[i] = c
 	}
 
 	return complexes, nil
+}
+
+func (db *dbRepository) Translate(complexID string, complexRequest complex.TranslateRequest, local string) (*complex.Complex, rest_errors.RestErr) {
+	var es update.EsUpdate
+	if local == "ar" {
+		update := update.UpdatePropertyRequest{
+			Field: "ar",
+			Value: complexRequest,
+		}
+		es.Fields = append(es.Fields, update)
+	}
+	if local == "kur" {
+		update := update.UpdatePropertyRequest{
+			Field: "kur",
+			Value: complexRequest,
+		}
+		es.Fields = append(es.Fields, update)
+	}
+	result, err := db.Update(complexID, es)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 func (db *dbRepository) GetByID(complexID string) (*complex.Complex, rest_errors.RestErr) {
@@ -63,14 +88,15 @@ func (db *dbRepository) GetByID(complexID string) (*complex.Complex, rest_errors
 
 	var c complex.Complex
 
-	bytes, err := result.Source.MarshalJSON()
-	if err != nil {
-		return nil, rest_errors.NewInternalServerErr("error when trying to parse database response", errors.New("database error"))
-	}
+	bytes, _ := result.Source.MarshalJSON()
+	// if err != nil {
+	// 	return nil, rest_errors.NewInternalServerErr("error when trying to parse database response", errors.New("database error"))
+	// }
 
-	if err := json.Unmarshal(bytes, &c); err != nil {
-		return nil, rest_errors.NewInternalServerErr("error when trying to parse response", errors.New("database error"))
-	}
+	// if err := json.Unmarshal(bytes, &c); err != nil {
+	// 	return nil, rest_errors.NewInternalServerErr("error when trying to parse response", errors.New("database error"))
+	// }
+	json.Unmarshal(bytes, &c)
 
 	c.ID = result.Id
 	return &c, nil
@@ -115,9 +141,10 @@ func (db *dbRepository) Update(id string, updateRequest update.EsUpdate) (*compl
 	if err != nil {
 		return nil, rest_errors.NewInternalServerErr(fmt.Sprintf("error when trying to parse database response"), errors.New("database error"))
 	}
-	if err := json.Unmarshal(bytes, &c); err != nil {
-		return nil, rest_errors.NewInternalServerErr(fmt.Sprintf("error when trying to parse database response"), errors.New("database error"))
-	}
+	// if err := json.Unmarshal(bytes, &c); err != nil {
+	// 	return nil, rest_errors.NewInternalServerErr(fmt.Sprintf("error when trying to parse database response"), errors.New("database error"))
+	// }
+	json.Unmarshal(bytes, &c)
 
 	c.ID = result.Id
 	return &c, nil
@@ -133,9 +160,10 @@ func (db *dbRepository) Search(query query.EsQuery) (complex.Complexes, rest_err
 	for i, hit := range result.Hits.Hits {
 		bytes, _ := hit.Source.MarshalJSON()
 		var c complex.Complex
-		if err := json.Unmarshal(bytes, &c); err != nil {
-			return nil, rest_errors.NewInternalServerErr("error when trying to parse response", errors.New("database error"))
-		}
+		// if err := json.Unmarshal(bytes, &c); err != nil {
+		// 	return nil, rest_errors.NewInternalServerErr("error when trying to parse response", errors.New("database error"))
+		// }
+		json.Unmarshal(bytes, &c)
 		c.ID = hit.Id
 		complexes[i] = c
 	}

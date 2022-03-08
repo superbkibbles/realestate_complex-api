@@ -21,6 +21,7 @@ type ComplexHandler interface {
 	Update(*gin.Context)
 	Search(*gin.Context)
 	DeleteIcon(*gin.Context)
+	Translate(*gin.Context)
 }
 
 type complexHandler struct {
@@ -34,13 +35,34 @@ func NewComplexHandler(srv complexService.ComplexService) ComplexHandler {
 }
 
 func (ch *complexHandler) Get(c *gin.Context) {
-	complexes, err := ch.srv.Get()
+	local := c.GetHeader("local")
+
+	complexes, err := ch.srv.Get(local)
 	if err != nil {
 		c.JSON(err.Status(), err)
 		return
 	}
 
 	c.JSON(http.StatusOK, complexes)
+}
+
+func (ch *complexHandler) Translate(c *gin.Context) {
+	complexID := strings.TrimSpace(c.Param("complex_id"))
+	local := c.GetHeader("local")
+
+	var complexRequest complex.TranslateRequest
+	if err := c.ShouldBindJSON(&complexRequest); err != nil {
+		restErr := rest_errors.NewBadRequestErr("Bad Request Body JSON")
+		c.JSON(restErr.Status(), restErr)
+		return
+	}
+	agency, err := ch.srv.Translate(complexID, complexRequest, local)
+	if err != nil {
+		c.JSON(err.Status(), err)
+		return
+	}
+
+	c.JSON(http.StatusOK, agency)
 }
 
 func (ch *complexHandler) Create(c *gin.Context) {
@@ -62,8 +84,9 @@ func (ch *complexHandler) Create(c *gin.Context) {
 
 func (ch *complexHandler) GetByID(c *gin.Context) {
 	complexID := strings.TrimSpace(c.Param("complex_id"))
+	local := c.GetHeader("local")
 
-	complex, err := ch.srv.GetByID(complexID)
+	complex, err := ch.srv.GetByID(complexID, local)
 	if err != nil {
 		c.JSON(err.Status(), err)
 		return
@@ -111,6 +134,7 @@ func (ch *complexHandler) Update(c *gin.Context) {
 }
 
 func (ch *complexHandler) Search(c *gin.Context) {
+	local := c.GetHeader("local")
 	var q query.EsQuery
 
 	if err := c.ShouldBindJSON(&q); err != nil {
@@ -119,7 +143,7 @@ func (ch *complexHandler) Search(c *gin.Context) {
 		return
 	}
 
-	properties, err := ch.srv.Search(q)
+	properties, err := ch.srv.Search(q, local)
 	if err != nil {
 		c.JSON(err.Status(), err)
 		return

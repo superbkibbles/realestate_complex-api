@@ -8,6 +8,9 @@ const (
 type Complex struct {
 	ID               string    `json:"id"`
 	Name             string    `json:"name"`
+	Description      string    `json:"description"`
+	Ar               Arabic    `json:"ar"`
+	Kur              Kurdish   `json:"kur"`
 	PriceFrom        int64     `json:"price_from"`
 	PriceTo          int64     `json:"price_to"`
 	Photo            string    `json:"photo"`
@@ -20,9 +23,29 @@ type Complex struct {
 	Services         services  `json:"services"`
 	SupportedSales   []string  `json:"supported_sales"`
 	Amenities        amenities `json:"amenities"`
+	IsSponsored      bool      `json:"is_sponsored"`
+	Promoted         bool      `json:"promoted"`
 
 	Status      string `json:"status"`
 	DateCreated string `json:"date_created"`
+}
+
+type TranslateRequest struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
+}
+
+type Arabic struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
+}
+
+type Kurdish struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
 }
 
 type amenities struct {
