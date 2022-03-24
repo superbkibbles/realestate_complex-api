@@ -112,13 +112,17 @@ func (db *dbRepository) Save(c *complex.Complex) rest_errors.RestErr {
 	return nil
 }
 
-func (db *dbRepository) UploadIcon(agency *complex.Complex, id string) rest_errors.RestErr {
+func (db *dbRepository) UploadIcon(complex *complex.Complex, id string) rest_errors.RestErr {
 	var es update.EsUpdate
-	update := update.UpdatePropertyRequest{
-		Field: "photo",
-		Value: agency.Photo,
-	}
+	var update update.UpdatePropertyRequest
+	update.Field = "photo"
+	update.Value = complex.Photo
+
 	es.Fields = append(es.Fields, update)
+	update.Field = "public_id"
+	update.Value = complex.PublicID
+	es.Fields = append(es.Fields, update)
+
 	_, err := db.Update(id, es)
 	if err != nil {
 		return err

@@ -2,17 +2,16 @@ package complexService
 
 import (
 	"mime/multipart"
-	"os"
-	"strings"
 
+	"github.com/google/uuid"
 	"github.com/superbkibbles/bookstore_utils-go/rest_errors"
-	"github.com/superbkibbles/realestate_complex-api/constants"
 	"github.com/superbkibbles/realestate_complex-api/domain/complex"
 	"github.com/superbkibbles/realestate_complex-api/domain/query"
 	"github.com/superbkibbles/realestate_complex-api/domain/update"
+	cloudstorage "github.com/superbkibbles/realestate_complex-api/repository/cloudStorage"
 	"github.com/superbkibbles/realestate_complex-api/repository/db"
+	"github.com/superbkibbles/realestate_complex-api/utils/crypto_utils"
 	"github.com/superbkibbles/realestate_complex-api/utils/date_utils"
-	"github.com/superbkibbles/realestate_complex-api/utils/file_utils"
 )
 
 type ComplexService interface {
@@ -27,12 +26,14 @@ type ComplexService interface {
 }
 
 type complexService struct {
-	dbRepo db.DbRepository
+	dbRepo    db.DbRepository
+	cloudRepo cloudstorage.CloudStorage
 }
 
-func NewComplexService(dbRepo db.DbRepository) ComplexService {
+func NewComplexService(dbRepo db.DbRepository, cloudRepo cloudstorage.CloudStorage) ComplexService {
 	return &complexService{
-		dbRepo: dbRepo,
+		dbRepo:    dbRepo,
+		cloudRepo: cloudRepo,
 	}
 }
 
@@ -146,12 +147,18 @@ func (srv *complexService) UploadIcon(id string, fileHeader *multipart.FileHeade
 	if fErr != nil {
 		return nil, rest_errors.NewInternalServerErr("Error while trying to open the file", nil)
 	}
-	filePath, err := file_utils.SaveFile(fileHeader, file)
-	if err != nil {
+	// filePath, err := file_utils.SaveFile(fileHeader, file)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	res, cloudErr := srv.cloudRepo.Save(file, id+crypto_utils.GetMd5(uuid.New().String()), id)
+	if cloudErr != nil {
 		return nil, err
 	}
 
-	complex.Photo = os.Getenv(constants.PUBLIC_API_KEY) + "assets/" + filePath
+	complex.Photo = res.Url
+	complex.PublicID = res.PublicID
 
 	srv.dbRepo.UploadIcon(complex, id)
 	return complex, nil
@@ -207,12 +214,12 @@ func (srv *complexService) DeleteIcon(agencyID string) rest_errors.RestErr {
 		return err
 	}
 
-	splittedPath := strings.Split(agency.Photo, "/")
-	fileName := splittedPath[len(splittedPath)-1]
-
-	file_utils.DeleteFile(fileName)
+	if err := srv.cloudRepo.Delete(agency.PublicID); err != nil {
+		return err
+	}
 
 	agency.Photo = ""
+	agency.PublicID = ""
 	srv.dbRepo.UploadIcon(agency, agencyID)
 	return nil
 }

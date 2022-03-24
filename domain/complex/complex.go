@@ -14,6 +14,7 @@ type Complex struct {
 	PriceFrom        int64     `json:"price_from"`
 	PriceTo          int64     `json:"price_to"`
 	Photo            string    `json:"photo"`
+	PublicID         string    `json:"public_id"`
 	Address          string    `json:"address"`
 	GPS              gps       `json:"gps"`
 	City             string    `json:"city"`
@@ -29,6 +30,11 @@ type Complex struct {
 	Status      string `json:"status"`
 	DateCreated string `json:"date_created"`
 }
+
+// type photo struct {
+// 	Url      string `json:"url"`
+// 	PublicID string `json:"public_id"`
+// }
 
 type TranslateRequest struct {
 	Name        string `json:"name"`

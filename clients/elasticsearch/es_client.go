@@ -3,6 +3,7 @@ package elasticsearch
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/olivere/elastic/v7"
@@ -95,6 +96,10 @@ func (c *esClient) Update(indexProperties string, typeProperty string, id string
 	for _, value := range updateRequest.Fields {
 		arr[value.Field] = value.Value
 	}
+
+	log.Println(arr)
+	log.Println(arr)
+	log.Println(arr)
 
 	result, err := c.client.Update().Index(indexProperties).Type(typeProperty).Id(id).Doc(arr).FetchSource(true).Do(ctx)
 	if err != nil {
