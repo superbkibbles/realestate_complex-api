@@ -26,7 +26,12 @@ func StartApplication() {
 	}
 	elasticsearch.Client.Init()
 	handler = http.NewComplexHandler(complexservice.NewComplexService(db.NewDbRepository(), cloudstorage.NewRepository(cld)))
-	router.Use(cors.Default())
+
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AddAllowHeaders("local")
+	router.Use(cors.New(config))
+
 	mapUrls()
 	router.Static("assets", "clients/visuals")
 	router.Run(os.Getenv(constants.PORT))
